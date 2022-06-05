@@ -1,7 +1,6 @@
 import dash
 from dash.dependencies import Input, Output
-from dash import dcc
-from dash import html
+from dash import dcc, html
 import numpy as np
 from financialreportingdfformatted import getfinancialreportingdf,getfinancialreportingdfformatted,save_sp500_stocks_info,save_russell_info,save_self_stocks_info
 from eligibilitycheck import eligibilitycheck
@@ -70,8 +69,13 @@ app.layout = html.Div([
 @app.callback(Output('my-graph', 'figure'), [Input('my-dropdown', 'value')])
 def update_graph(selected_dropdown_value):
     global stockpricedf # Needed to modify global copy of stockpricedf
-    stockpricedf = web.DataReader(
+    try:
+        stockpricedf = web.DataReader(
         selected_dropdown_value.strip(), data_source='yahoo',
+        start=dt(2013, 1, 1), end=dt.now())
+    except:
+        stockpricedf = web.DataReader(
+        'amzn', data_source='yahoo',
         start=dt(2013, 1, 1), end=dt.now())
     return {
         'data': [{
