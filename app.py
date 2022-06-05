@@ -126,4 +126,4 @@ def generate_future_price_table(selected_dropdown_value,discountrate,marginrate,
 
 
 if __name__ == '__main__':
-    app.run_server(debug=True)
+    app.run_server(debug=True, host="0.0.0.0", port="8050")
