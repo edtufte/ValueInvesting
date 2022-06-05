@@ -1,3 +1,4 @@
+import numpy_financial as npf
 import numpy as np
 import pandas as pd
 from pandas_datareader import data as web
@@ -12,11 +13,12 @@ def generate_price_df(ticker,financialreportingdf,stockpricedf,discountrate,marg
 
 	# Find EPS Annual Compounded Growth Rate
 	# annualgrowthrate =  financialreportingdf.epsgrowth.mean() #growth rate
+	years = 10 #period
 
 	try:
 		print(financialreportingdf.eps.iloc[0])
 		print(financialreportingdf.eps.iloc[-1])
-		annualgrowthrate =  np.rate(5, 0, -1*financialreportingdf.eps.iloc[0], financialreportingdf.eps.iloc[-1])
+		annualgrowthrate =  npf.rate(5, 0, -1*financialreportingdf.eps.iloc[0], financialreportingdf.eps.iloc[-1])
 		print(annualgrowthrate)
 
 		# Non Conservative
@@ -26,7 +28,7 @@ def generate_price_df(ticker,financialreportingdf,stockpricedf,discountrate,marg
 		# lasteps = financialreportingdf.eps.mean()
 
 		years  = 10 #period
-		futureeps = abs(np.fv(annualgrowthrate,years,0,lasteps))
+		futureeps = abs(npf.fv(annualgrowthrate,years,0,lasteps))
 		dfprice.loc[0] = [ticker,annualgrowthrate,lasteps,futureeps]
 	except:
 		print('eps does not exist')
@@ -41,7 +43,7 @@ def generate_price_df(ticker,financialreportingdf,stockpricedf,discountrate,marg
 	dfprice['FV'] = dfprice['futureeps']*dfprice['peratio']
 
 
-	dfprice['PV'] = abs(np.pv(discountrate,years,0,fv=dfprice['FV']))
+	dfprice['PV'] = abs(npf.pv(discountrate,years,0,fv=dfprice['FV']))
 
 	if dfprice['FV'].values[0] > 0:
 		dfprice['marginprice'] = dfprice['PV']*(1-marginrate)

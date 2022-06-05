@@ -29,7 +29,7 @@ app.layout = html.Div([
         dcc.Dropdown(
             id='my-dropdown',
             options=save_sp500_stocks_info()+save_self_stocks_info(),
-            value='coke'
+            value='AMZN'
         ),
         html.H2('5 years stocks price graph'),
         dcc.Graph(id='my-graph'),
@@ -49,7 +49,7 @@ app.layout = html.Div([
         id='discountrate-slider',
         min=0,
         max=1,
-        value=0.15,
+        value=discountrate,
         step=0.05,
         marks={i: '{}'.format(round(i,2)) for i in np.arange(0, 1, 0.05)}
     ),
@@ -58,7 +58,7 @@ app.layout = html.Div([
         id='marginrate-slider',
         min=0,
         max=1,
-        value=0.15,
+        value=margin,
         step=0.05,
         marks={i: '{}'.format(round(i,2)) for i in np.arange(0, 1, 0.05)}
     ),

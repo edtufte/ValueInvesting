@@ -1,7 +1,8 @@
 import pandas as pd
+from urllib.request import urlopen
 from bs4 import BeautifulSoup
 import requests
-from datetime import date
+
 from format import format
 
 def getfinancialreportingdf(ticker):
@@ -65,9 +66,8 @@ def getfinancialreportingdf(ticker):
     # Don't forget to add in roe, interest coverage ratio
 
     ## Make it into Dataframes
-
     df= pd.DataFrame({'eps': eps,'epsgrowth': epsgrowth,'netincome': netincome,'shareholderequity': shareholderequity,'roa': 
-                  roa,'longtermdebt': longtermdebt,'interestexpense': interestexpense,'ebitda': ebitda},index=range(date.today().year-5,date.today().year))
+                  roa,'longtermdebt': longtermdebt,'interestexpense': interestexpense,'ebitda': ebitda},index=[2014,2015,2016,2017,2018])
     return df
 
 def getelementinlist(list,element):
@@ -95,7 +95,7 @@ def getfinancialreportingdfformatted(ticker):
 def save_sp500_stocks_info():
     print("Getting SP500 stocks info from wikipedia")
     resp = requests.get('http://en.wikipedia.org/wiki/List_of_S%26P_500_companies')
-    soup = BeautifulSoup(resp.text, 'html.parser')
+    soup = BeautifulSoup(resp.text, 'lxml')
     table = soup.find('table', {'class': 'wikitable sortable'})
     stocks_info=[]
     tickers = []
@@ -163,6 +163,11 @@ def save_self_stocks_info():
     dictlist.append({'value':'NESN', 'label':'Nestle'})
     dictlist.append({'value':'BN', 'label':'Danone'})
     dictlist.append({'value': 'DATA', 'label': 'Tableau Software Data Visualization'})
-    dictlist.append({'value': 'S58','label':'SATS'})
+
+
+
+
+
+
 
     return dictlist
