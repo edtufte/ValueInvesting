@@ -68,7 +68,7 @@ def getfinancialreportingdf(ticker):
     ## Make it into Dataframes
     df= pd.DataFrame({'eps': eps,'epsgrowth': epsgrowth,'netincome': netincome,'shareholderequity': shareholderequity,'roa': 
                   roa,'longtermdebt': longtermdebt,'interestexpense': interestexpense,'ebitda': ebitda},index=[2017,2018,2019,2020,2021,2022])
-    df = df.iloc[: , :-1]
+    df.drop(df.tail(1).index,inplace=True)
     return df
 
 def getelementinlist(list,element):

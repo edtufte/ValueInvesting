@@ -22,10 +22,10 @@ def generate_price_df(ticker,financialreportingdf,stockpricedf,discountrate,marg
 		print(annualgrowthrate)
 
 		# Non Conservative
-		lasteps = financialreportingdf.eps.tail(1).values[0] #presentvalue
+		# lasteps = financialreportingdf.eps.tail(1).values[0] #presentvalue
 
 		# conservative
-		# lasteps = financialreportingdf.eps.mean()
+		lasteps = financialreportingdf.eps.mean()
 
 		years  = 10 #period
 		futureeps = abs(npf.fv(annualgrowthrate,years,0,lasteps))
