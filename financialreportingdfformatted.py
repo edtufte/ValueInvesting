@@ -95,7 +95,7 @@ def getfinancialreportingdfformatted(ticker):
 def save_sp500_stocks_info():
     print("Getting SP500 stocks info from wikipedia")
     resp = requests.get('http://en.wikipedia.org/wiki/List_of_S%26P_500_companies')
-    soup = BeautifulSoup(resp.text, 'lxml')
+    soup = BeautifulSoup(resp.text, 'html.parser')
     table = soup.find('table', {'class': 'wikitable sortable'})
     stocks_info=[]
     tickers = []

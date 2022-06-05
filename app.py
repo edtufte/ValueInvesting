@@ -1,7 +1,7 @@
 import dash
 from dash.dependencies import Input, Output
-import dash_core_components as dcc
-import dash_html_components as html
+from dash import dcc
+from dash import html
 import numpy as np
 from financialreportingdfformatted import getfinancialreportingdf,getfinancialreportingdfformatted,save_sp500_stocks_info,save_russell_info,save_self_stocks_info
 from eligibilitycheck import eligibilitycheck
