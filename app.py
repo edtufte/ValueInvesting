@@ -1,3 +1,6 @@
+## TODO: stop re-running getfinancialreportingdfformatted on each call-back. Right now, some tables don't update when the df does. 
+## Am re-creating the df with each call-back
+
 import dash
 from dash.dependencies import Input, Output
 from dash import dcc, html
@@ -76,11 +79,11 @@ def update_graph(selected_dropdown_value):
     try:
         stockpricedf = web.DataReader(
         selected_dropdown_value.strip(), data_source='yahoo',
-        start=dt(2013, 1, 1), end=dt.now())
+        start=dt(2017, 1, 1), end=dt.now())
     except:
         stockpricedf = web.DataReader(
         firstticker.split(), data_source='yahoo',
-        start=dt(2013, 1, 1), end=dt.now())
+        start=dt(2017, 1, 1), end=dt.now())
     return {
         'data': [{
             'x': stockpricedf.index,
