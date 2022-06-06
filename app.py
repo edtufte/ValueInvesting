@@ -92,7 +92,7 @@ def update_graph(selected_dropdown_value):
     }
 
 
-# for the table
+# for the financial metrics table
 @app.callback(Output('my-table', 'children'), [Input('my-dropdown', 'value')])
 def generate_table(selected_dropdown_value,max_rows=10):
     global financialreportingdf # Needed to modify global copy of financialreportingdf
