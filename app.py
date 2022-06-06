@@ -19,6 +19,10 @@ margin = 0.15
 app = dash.Dash(__name__)
 server = app.server
 
+#set up dropdown options
+tickeroptions=save_sp500_stocks_info()+save_self_stocks_info()
+header, firstticker = next(iter(tickeroptions[0].items()))
+
 app.layout = html.Div([
     html.Div([
 
@@ -27,8 +31,8 @@ app.layout = html.Div([
         html.H2('Choose a stock ticker'),
         dcc.Dropdown(
             id='my-dropdown',
-            options=save_sp500_stocks_info()+save_self_stocks_info(),
-            value='AMZN'
+            options=tickeroptions,
+            value=firstticker
         ),
         html.H2('5 years stocks price graph'),
         dcc.Graph(id='my-graph'),
@@ -75,7 +79,7 @@ def update_graph(selected_dropdown_value):
         start=dt(2013, 1, 1), end=dt.now())
     except:
         stockpricedf = web.DataReader(
-        'amzn', data_source='yahoo',
+        firstticker.split(), data_source='yahoo',
         start=dt(2013, 1, 1), end=dt.now())
     return {
         'data': [{
@@ -103,6 +107,7 @@ def generate_table(selected_dropdown_value,max_rows=10):
 @app.callback(Output('reason-list', 'children'), [Input('my-dropdown', 'value')])
 def generate_reason_list(selected_dropdown_value):
     global financialreportingdf # Needed to modify global copy of financialreportingdf
+    financialreportingdf = getfinancialreportingdfformatted(selected_dropdown_value.strip().lower()).reset_index()
     reasonlist = eligibilitycheck(selected_dropdown_value.strip().lower(),financialreportingdf)
     
     # Header
@@ -115,6 +120,7 @@ def generate_reason_list(selected_dropdown_value):
 def generate_future_price_table(selected_dropdown_value,discountrate,marginrate,max_rows=10):
     global financialreportingdf # Needed to modify global copy of financialreportingdf
     global stockpricedf
+    financialreportingdf = getfinancialreportingdfformatted(selected_dropdown_value.strip().lower()).reset_index()
     pricedf = generate_price_df(selected_dropdown_value.strip(),financialreportingdf,stockpricedf,discountrate,marginrate)
 
     # Header
