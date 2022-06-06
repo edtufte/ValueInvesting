@@ -16,6 +16,7 @@ stockpricedf = 0
 financialreportingdf = 0
 discountrate = 0.2
 margin = 0.15
+current_dropdown = ''
 
 
 # Set up the app
@@ -44,7 +45,7 @@ app.layout = html.Div([
     ],style={'width': '40%', 'display': 'inline-block'}),
     html.Div([
         html.H2('Critical Variables and Ratios'),
-        html.Table(id='my-table'),
+        html.Table(id='metrics-table'),
         html.P(''),
         html.H2('Warning Flags'),
         html.Table(id='reason-list'),
@@ -93,11 +94,12 @@ def update_graph(selected_dropdown_value):
 
 
 # for the financial metrics table
-@app.callback(Output('my-table', 'children'), [Input('my-dropdown', 'value')])
+@app.callback(Output('metrics-table', 'children'), [Input('my-dropdown', 'value')])
 def generate_table(selected_dropdown_value,max_rows=10):
     global financialreportingdf # Needed to modify global copy of financialreportingdf
-    financialreportingdf = getfinancialreportingdfformatted(selected_dropdown_value.strip().lower()).reset_index()
-    financialreportingwritten = getfinancialreportingdf(selected_dropdown_value.strip()).reset_index()
+    current_dropdown = selected_dropdown_value.strip()
+    financialreportingdf = getfinancialreportingdfformatted(current_dropdown).reset_index()
+    financialreportingwritten = getfinancialreportingdf(current_dropdown).reset_index()
     financialreportingwritten[['roe','interestcoverageratio']] = np.round(financialreportingdf[['roe','interestcoverageratio']],2)
 
     # Header
@@ -107,11 +109,14 @@ def generate_table(selected_dropdown_value,max_rows=10):
 
     
 # for the reason-list
-@app.callback(Output('reason-list', 'children'), [Input('my-dropdown', 'value')])
+@app.callback(Output('reason-list', 'children'), 
+[Input('metrics-table', 'children')]
+# [Input('my-dropdown', 'value')]
+)
 def generate_reason_list(selected_dropdown_value):
     global financialreportingdf # Needed to modify global copy of financialreportingdf
-    financialreportingdf = getfinancialreportingdfformatted(selected_dropdown_value.strip().lower()).reset_index()
-    reasonlist = eligibilitycheck(selected_dropdown_value.strip().lower(),financialreportingdf)
+    # financialreportingdf = getfinancialreportingdfformatted(selected_dropdown_value.strip().lower()).reset_index()
+    reasonlist = eligibilitycheck(current_dropdown,financialreportingdf)
     
     # Header
     return [html.Tr(html.Th('reasonlist'))] + [html.Tr(html.Td(reason)) for reason in reasonlist]
@@ -119,12 +124,17 @@ def generate_reason_list(selected_dropdown_value):
 
 # for the expected-future-price-table
 @app.callback(Output('expected-future-price-table', 'children'), 
-    [Input('my-dropdown', 'value'), Input('discountrate-slider', 'value'),Input('marginrate-slider', 'value')])
+    [Input('metrics-table', 'children'),
+    # Input('my-dropdown', 'value'), 
+    Input('discountrate-slider', 'value'),
+    Input('marginrate-slider', 'value')]
+)
 def generate_future_price_table(selected_dropdown_value,discountrate,marginrate,max_rows=10):
     global financialreportingdf # Needed to modify global copy of financialreportingdf
     global stockpricedf
-    financialreportingdf = getfinancialreportingdfformatted(selected_dropdown_value.strip().lower()).reset_index()
-    pricedf = generate_price_df(selected_dropdown_value.strip(),financialreportingdf,stockpricedf,discountrate,marginrate)
+    # current_dropdown = selected_dropdown_value.strip()
+    # financialreportingdf = getfinancialreportingdfformatted(current_dropdown.lower()).reset_index()
+    pricedf = generate_price_df(current_dropdown,financialreportingdf,stockpricedf,discountrate,marginrate)
 
     # Header
     return [html.Tr([html.Th(col) for col in pricedf.columns])] + [html.Tr([

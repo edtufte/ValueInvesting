@@ -20,10 +20,9 @@ def eligibilitycheck(ticker,dfformatted):
     # Long term debt < 5 * income
     if dfformatted.longtermdebt.tail(1).values[0]>5*dfformatted.netincome.tail(1).values[0]:
             elegiblestock = False
-            reasonlist.append('PY long term debt is more than 5 times the net income at '
-                + str(dfformatted.netincome.tail(1).values[0]))
+            reasonlist.append('PY long term debt is more than 5 times the net income')
     # Interest Coverage Ratio > 3
-    if dfformatted.interestcoverageratio.tail(1).values[0]<3:
+    if dfformatted.interestcoverageratio.tail(1).values[0]<3 and dfformatted.interestcoverageratio.tail(1).values[0] != 0:
             elegiblestock = False
             reasonlist.append('PY Interest coverage ratio is less than 3 at '
                 + str(round(dfformatted.interestcoverageratio.tail(1).values[0],2)))
