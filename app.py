@@ -5,7 +5,7 @@ import dash
 from dash.dependencies import Input, Output
 from dash import dcc, html
 import numpy as np
-from financialreportingdfformatted import getfinancialreportingdf,getfinancialreportingdfformatted,save_sp500_stocks_info,save_russell_info,save_self_stocks_info
+from financialreportingdfformatted import getfinancialreportingdf,getfinancialreportingdfformatted,save_sp500_stocks_info,save_self_stocks_info
 from eligibilitycheck import eligibilitycheck
 from futurepricing import generate_price_df
 from pandas_datareader import data as web
@@ -13,8 +13,8 @@ from datetime import datetime as dt
 
 # Set up global variables
 stockpricedf = 0
-financialreportingdf =0
-discountrate=0.2
+financialreportingdf = 0
+discountrate = 0.2
 margin = 0.15
 
 
